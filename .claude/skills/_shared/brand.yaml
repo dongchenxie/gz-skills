@@ -13,8 +13,8 @@ school:
 # 公众号每篇推文头尾两张固定图。已知是 mmbiz.qpic.cn 上的 WeChat CDN 资源。
 # 首次运行 skill 时，若值为 TODO，提示用户给一篇示例推文 URL，自动用 Playwright 提取后写回。
 article_assets:
-  header_image_url: TODO   # 公众号文章头部固定图 (mmbiz.qpic.cn 域名)
-  footer_image_url: TODO   # 公众号文章尾部固定图（一般含联系方式 / 二维码）
+  header_image_url: "https://mmecoa.qpic.cn/sz_mmecoa_gif/0PdgjwEvWC5iaNenzW6jkqopyc7RnEjQqjHZMeiat7ScibhRaOyxzJWiaZDwSM1yotYrQCbW5UM9Fd4kcRazhicuZdKqO68Brwf3F4nzKnqS1uxU/640?wx_fmt=gif&from=appmsg&tp=webp&wxfrom=10005&wx_lazy=1"
+  footer_image_url: "https://mmecoa.qpic.cn/mmecoa_jpg/0PdgjwEvWC5wgibhXdGIySKTURw4lUMZYgS3ibLiaGL8PJ2NbOSYcWRD78R6oicS8sEueYjum0aQub9Fibm0icdY6DfpVzK8FX6qlvkmyuM5Wicgjs/640?wx_fmt=jpeg&from=appmsg&tp=webp&wxfrom=10005&wx_lazy=1"
 
 # 视觉规范 (135 编辑器 / 微信公众号渲染口径)
 visual:
