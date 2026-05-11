@@ -1,46 +1,81 @@
-# 政府政策官网源。营销类 / 指引类 skill 在抓取政策原文前先查这里，
-# 优先在已知官网内检索，避免被钓鱼站 / 自媒体二手稿污染。
+# 政府政策官网源 —— 白名单。
+# 所有 gzcots-* 生成类 skill 抓取/引用政策原文前必须先查这里。
+#
+# ───────── 使用规则（硬约束，违反 = 审核红线，阻塞发布） ─────────
+#
+# 1. 白名单原则：推文中引用的 URL、条款、数字、日期、机构名，**域名必须在本文件内**。
+#    school_internal 域名仅供"指引指南"类（gzcots-guide）使用。
+#
+# 2. 域名校验：sub-agent 在抓取前必须用 URL parser 取 host，逐项匹配本文件 domain。
+#    不匹配 → sub-agent 立即 abort 并把 URL 回报主上下文，**绝不**采纳为引用源。
+#
+# 3. 外网（清单外域名）：sub-agent 仅可用于背景理解（"业内如何解读"），
+#    不允许出现在正文。具体数字 / 条款 / 期限 → 必须回到本清单内的官网核对。
+#
+# 4. 清单外发现高价值信源：sub-agent **不要私自采纳**，把候选 URL 放回主上下文，
+#    由小编审核后手工加白到本文件，**不允许 skill 自动改 sources.yaml**。
+#
+# 5. 抓取优先级：直连 WebFetch → 失败 fallback Playwright MCP (`mcp__playwright__*`)。
+#    每个站点的栏目入口路径见 category_path 字段；若该字段为空，sub-agent 从首页爬一层。
+#
+# 6. 三层并发（policy / tips 默认）：sub-agent 接到主题后并发抓 national + guangdong_province + 受众所在 city。
+#    详见 `_shared/research-strategy.md`。
+#
+# ───────── 信源清单 ─────────
 
 priority: high
-# 抓取优先尝试顺序：直连 fetch → 失败 fallback 到 Playwright MCP（mcp__playwright__*）
-# 任何时候都不要相信非政府域名的"政策原文"
 
 national:
   - name: 住建部
     url: https://www.mohurd.gov.cn/
+    category_path: ""     # unreachable on setup（ECONNREFUSED）；fallback 走首页爬一层（见 research-strategy.md）
   - name: 人社部
     url: https://www.mohrss.gov.cn/
+    category_path: "/xxgk2020/"   # uncertain — setup 首页返回空，按官方信息公开主入口推断，首跑需人工复核
   - name: 中国建设工程标准化协会
     url: http://www.cecs.org.cn/index.html
+    category_path: ""     # unreachable on setup（60s timeout）；fallback 走首页爬一层
 
 guangdong_province:
   - name: 广东省人力资源和社会保障厅
     url: https://hrss.gd.gov.cn/
+    category_path: "/zwgk/gsgg/index.html"   # 通知公告
   - name: 广东省住房和城乡建设厅
     url: https://zfcxjst.gd.gov.cn/
+    category_path: "/xxgk/gsgg/index.html"   # 公示公告
   - name: 广东政务服务网
     url: https://www.gdzwfw.gov.cn/
+    category_path: "/portal/v2/personal/hot"   # 个人办事热门入口；法人入口 fallback: /portal/v2/legal/hot
   - name: 广东人事考试网
     url: https://rsks.gd.gov.cn/
+    category_path: "/zwgk/gzdt/index.html"    # 工作动态（考试机构发布首选）；fallback: /zwgk/tzgg/index.html
 
 guangzhou_city:
   - name: 广州市人力资源和社会保障厅
     url: https://rsj.gz.gov.cn/
+    category_path: "/zwdt/tzgg"   # 通知公告（政务动态下）
   - name: 广州市住房和城乡建设局
     url: https://zfcj.gz.gov.cn/
+    category_path: "/zjyw/zlaq/tzgg/index.html"   # 通知公告埋在"质量安全"板块下，无主域级入口
 
 jiangmen_city:
   - name: 江门市人力资源和社会保障局
     url: https://www.jiangmen.gov.cn/bmpd/jmsrlzyhshbzj/
+    category_path: "/bmpd/jmsrlzyhshbzj/zwgk/gggs/index.html"   # 政务公开/公告公示
   - name: 江门市住房和城乡建设局
     url: https://www.jiangmen.gov.cn/bmpd/jmszfhcxjsj/
+    category_path: "/bmpd/jmszfhcxjsj/zwgk/gztg/index.html"     # 通知公告
 
 yunfu_city:
   - name: 云浮市人力资源和社会保障局
     url: https://www.yunfu.gov.cn/rsj/index.html
+    category_path: "/rsj/zx/tzgg/index.html"   # 通知公告
   - name: 云浮市住房和城乡建设局
     url: https://www.yunfu.gov.cn/zjj/
+    category_path: "/zjj/gsgg/tzgg/index.html"   # 公示公告/通知公告
 
 school_internal:
+  # 仅 gzcots-guide / gzcots-news 可引用。其他 sub-skill 不要把它当政策原文源用。
   - name: 广建职校学校网站操作指引
     url: https://www.gzcots.com/?c=school&a=introduce&cid=1
+    category_path: ""

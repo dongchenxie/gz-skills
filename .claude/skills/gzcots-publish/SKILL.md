@@ -1,11 +1,19 @@
 ---
 name: gzcots-publish
-description: 广建职校公众号推文生成入口。当用户要给广建职校公众号写一篇新推文时使用。先问推文类型，再路由到对应的子 skill。
+description: 广建职校公众号推文生成入口。当用户要给广建职校公众号写一篇新推文时使用。先问推文类型与本篇目的，再路由到对应的子 skill。所有引用信源严格限定在 _shared/sources.yaml 列出的官方网站。
 ---
 
 # gzcots-publish
 
 广州市建设职业培训学校（gzcots）公众号推文生成的统一入口。本 skill 本身不直接生成内容，而是**问清类型并路由**到对应的 sub-skill。
+
+## 全局硬约束（对所有被路由到的 sub-skill 强制生效）
+
+被路由到的 sub-skill 必须遵守以下 3 条；违反任意一条都是审核红线：
+
+1. **信源白名单**：所有外部信息源（URL、条款、数字、日期、机构名）必须来自 `_shared/sources.yaml` 列出的域名。详见 `_shared/sources.yaml` 顶部说明。
+2. **抓取必须 sub-agent 内完成**：主上下文不直接 `WebFetch` 政策原文。所有抓取派 `Agent` 子 agent（`subagent_type: general-purpose`），主上下文只接收结构化 JSON。详见 `_shared/research-strategy.md`。
+3. **必须先问 Q0 本篇目的**：所有 sub-skill 在进入自己的问题清单之前，必须先问"本篇推文的核心目的是什么"（增粉 / 转化 / 混合，或 news/holiday 的本地化变体）。目的决定标题、开头、节奏、CTA、必带块。详见 `_shared/article-goals.md`。
 
 ## 启动前置检查
 
