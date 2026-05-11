@@ -1,0 +1,46 @@
+# 政府政策官网源。营销类 / 指引类 skill 在抓取政策原文前先查这里，
+# 优先在已知官网内检索，避免被钓鱼站 / 自媒体二手稿污染。
+
+priority: high
+# 抓取优先尝试顺序：直连 fetch → 失败 fallback 到 Playwright MCP（mcp__playwright__*）
+# 任何时候都不要相信非政府域名的"政策原文"
+
+national:
+  - name: 住建部
+    url: https://www.mohurd.gov.cn/
+  - name: 人社部
+    url: https://www.mohrss.gov.cn/
+  - name: 中国建设工程标准化协会
+    url: http://www.cecs.org.cn/index.html
+
+guangdong_province:
+  - name: 广东省人力资源和社会保障厅
+    url: https://hrss.gd.gov.cn/
+  - name: 广东省住房和城乡建设厅
+    url: https://zfcxjst.gd.gov.cn/
+  - name: 广东政务服务网
+    url: https://www.gdzwfw.gov.cn/
+  - name: 广东人事考试网
+    url: https://rsks.gd.gov.cn/
+
+guangzhou_city:
+  - name: 广州市人力资源和社会保障厅
+    url: https://rsj.gz.gov.cn/
+  - name: 广州市住房和城乡建设局
+    url: https://zfcj.gz.gov.cn/
+
+jiangmen_city:
+  - name: 江门市人力资源和社会保障局
+    url: https://www.jiangmen.gov.cn/bmpd/jmsrlzyhshbzj/
+  - name: 江门市住房和城乡建设局
+    url: https://www.jiangmen.gov.cn/bmpd/jmszfhcxjsj/
+
+yunfu_city:
+  - name: 云浮市人力资源和社会保障局
+    url: https://www.yunfu.gov.cn/rsj/index.html
+  - name: 云浮市住房和城乡建设局
+    url: https://www.yunfu.gov.cn/zjj/
+
+school_internal:
+  - name: 广建职校学校网站操作指引
+    url: https://www.gzcots.com/?c=school&a=introduce&cid=1

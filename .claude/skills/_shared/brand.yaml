@@ -1,0 +1,40 @@
+# 品牌与基础信息库。所有 gzcots-* skill 在运行时第一步都读这里。
+# 字段为 TODO 时 skill 应进入 setup 流程，向用户索取或用 Playwright 从样例文章提取。
+
+school:
+  name_full: 广州市建设职业培训学校
+  name_short: 广建职校
+  founded: 1988
+  governed_by: 广州市教育局直属
+  address: 广州市华乐路57号华乐大厦北塔四楼
+  hotline: 4000-323-118
+  website: https://www.gzcots.com/
+
+# 公众号每篇推文头尾两张固定图。已知是 mmbiz.qpic.cn 上的 WeChat CDN 资源。
+# 首次运行 skill 时，若值为 TODO，提示用户给一篇示例推文 URL，自动用 Playwright 提取后写回。
+article_assets:
+  header_image_url: TODO   # 公众号文章头部固定图 (mmbiz.qpic.cn 域名)
+  footer_image_url: TODO   # 公众号文章尾部固定图（一般含联系方式 / 二维码）
+
+# 视觉规范 (135 编辑器 / 微信公众号渲染口径)
+visual:
+  font_stack: "'Microsoft YaHei', 'PingFang SC', sans-serif"
+  body_font_size: 16px
+  body_line_height: 1.75
+  body_color: "#333333"
+  brand_primary: "#1a4b8c"   # 工程蓝（占位，确认后改）
+  brand_accent: "#d9534f"    # 紧迫感红 (用于 CTA / "最高补贴")
+  highlight_bg: "#f5f9ff"
+  border_color: "#1a4b8c"
+
+# 输出口径
+editor:
+  target: 135editor   # 影响 HTML 写法：必须全部 inline style，section 嵌套，不使用 script/style/link
+  paste_target: WeChat MP   # 最终粘到微信公众号原生编辑器之前先过 135
+
+# 客户画像（强制前置选择，决定话术）
+audience:
+  primary: B端建筑施工企业
+  primary_reason: 一单成交金额高，资质 / 合规 / 批量培训是长期需求
+  secondary: C端个人（持证 / 考证 / 工人 / 申报补贴）
+  cross_sell: 所有 C 端推文末尾必须留 B 端引流 CTA（"贵司有批量培训需求？"）
