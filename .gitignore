@@ -1,0 +1,11 @@
+.DS_Store
+*.swp
+*.swo
+node_modules/
+__pycache__/
+*.pyc
+.env
+.env.local
+
+# Claude Code local-only settings (machine-specific permissions)
+.claude/settings.local.json
