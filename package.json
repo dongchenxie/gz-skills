@@ -1,0 +1,13 @@
+{
+  "name": "gz-skills",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:image": "node --env-file=.env scripts/test-image-gen.mjs",
+    "gen:image": "node --env-file=.env scripts/gen-image.mjs"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.658.0",
+    "@google/genai": "latest"
+  }
+}

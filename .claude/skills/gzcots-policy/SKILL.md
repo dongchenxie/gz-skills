@@ -14,6 +14,7 @@ description: 广建职校公众号"政策解读+营销"类推文生成。当用�
 - **抓取在 sub-agent 内**：主上下文不直接 WebFetch，按 `_shared/research-strategy.md` 执行。
 - **三层并发**：本类推文默认执行 国家部 + 广东省厅 + 受众市局 的三层并发抓取，sub-agent 打分挑 top 1-3 回主上下文。
 - **先问 Q0 再问 Q1–Q4**：本篇目的决定全文文体，按 `_shared/article-goals.md` 落地。
+- **配图（inline）必须自动生成**：Research 后、渲染前派 sub-agent 调 `scripts/gen-image.mjs --role inline`，产出 1–2 张装饰图穿插正文。头图 ①、尾图 ⑨ **不替换**，仍走 brand.yaml。详见 `_shared/image-generation.md`。基调锁中国语境（东亚人脸 / 中式建筑 / 政府政策手册视觉）。
 
 ## 启动前置检查
 
@@ -55,6 +56,15 @@ description: 广建职校公众号"政策解读+营销"类推文生成。当用�
 
 主上下文拿到 JSON 后才开始撰稿。
 
+## 配图生成（Research 后、渲染前 · 必须 sub-agent · 仅 inline）
+
+按 `_shared/image-generation.md` 契约派一个 `Agent`（`subagent_type: general-purpose`）并发调 `scripts/gen-image.mjs --role inline`。本类配额：
+
+- **inline × 1–2**：`--article-type policy --audience {Q1 映射 B/C/mix} --goal {Q0} --theme "{1 句话主题}"`
+- `--style-extra` 按主题贴具体场景，例如"持证人在工位上看政策文件" / "申报截止日倒计时桌历" / "审图员在办公桌前核对资料"。
+
+**头图 ① 与尾图 ⑨ 不替换，仍走 `brand.yaml.article_assets`**。sub-agent 只返回 `inline_urls[]`，按 ⑩ 块样式穿插在 ④/⑤ 块之间。失败的位跳过，不阻塞，但在 audit 标 ⚠️。
+
 ## 撰稿规则（Q0 × Q1 二维分流）
 
 按 `_shared/article-goals.md` 的二维交叉表落笔：
@@ -85,11 +95,12 @@ description: 广建职校公众号"政策解读+营销"类推文生成。当用�
 
 ## 审核
 
-按 `_shared/audit-checklist.md` 跑 5 维自动审核，**额外**检查：
+按 `_shared/audit-checklist.md` 跑 6 维自动审核（含配图维度），**额外**检查：
 
 - Q0 是否在 audit-report 头部明确记录。
 - 当前推文的 CTA tone / 必带块 / 二维码处理是否与 Q0 对应规范一致（详见 `article-goals.md` 末尾"审核钩子"）。
 - sub-agent 返回 JSON 的 `rejected` 字段如果有"域名白名单不符"被拦截的 URL，必须在审核报告里列出（供小编评估是否需要把新域名加白到 sources.yaml）。
+- 配图（inline）张数是否在 1–2 之间；① 头图、⑨ 尾图是否仍为 brand.yaml 固定图（被替换 = 红线）；inline 图是否需人工目视确认中国语境基调（详见 `_shared/image-generation.md` §5 + audit-checklist 第 6 维）。
 
 ## 最终输出
 

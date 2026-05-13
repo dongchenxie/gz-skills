@@ -10,27 +10,33 @@ school:
   hotline: 4000-323-118
   website: https://www.gzcots.com/
 
-# 公众号每篇推文头尾两张固定图。已知是 mmbiz.qpic.cn 上的 WeChat CDN 资源。
-# 首次运行 skill 时，若值为 TODO，提示用户给一篇示例推文 URL，自动用 Playwright 提取后写回。
+# 公众号每篇推文头尾两张固定图。
+# 当前托管在 Cloudflare R2。如更换图源（如换回 mmbiz.qpic.cn 微信 CDN），直接替换 URL 即可，
+# 所有 sub-skill 在生成 HTML 时只引用这两个字段，不要在 sub-skill 里硬编码图片地址。
 article_assets:
-  header_image_url: "https://mmecoa.qpic.cn/sz_mmecoa_gif/0PdgjwEvWC5iaNenzW6jkqopyc7RnEjQqjHZMeiat7ScibhRaOyxzJWiaZDwSM1yotYrQCbW5UM9Fd4kcRazhicuZdKqO68Brwf3F4nzKnqS1uxU/640?wx_fmt=gif&from=appmsg&tp=webp&wxfrom=10005&wx_lazy=1"
-  footer_image_url: "https://mmecoa.qpic.cn/mmecoa_jpg/0PdgjwEvWC5wgibhXdGIySKTURw4lUMZYgS3ibLiaGL8PJ2NbOSYcWRD78R6oicS8sEueYjum0aQub9Fibm0icdY6DfpVzK8FX6qlvkmyuM5Wicgjs/640?wx_fmt=jpeg&from=appmsg&tp=webp&wxfrom=10005&wx_lazy=1"
+  header_image_url: "https://pub-e96b09db0cf94150b117f241f58a10f3.r2.dev/header.gif"
+  footer_image_url: "https://pub-e96b09db0cf94150b117f241f58a10f3.r2.dev/640.jpeg"
 
 # 视觉规范 (135 编辑器 / 微信公众号渲染口径)
 visual:
   font_stack: "'Microsoft YaHei', 'PingFang SC', sans-serif"
   body_font_size: 16px
-  body_line_height: 1.75
-  body_color: "#333333"
-  brand_primary: "#1a4b8c"   # 工程蓝（占位，确认后改）
-  brand_accent: "#d9534f"    # 紧迫感红 (用于 CTA / "最高补贴")
-  highlight_bg: "#f5f9ff"
+  body_line_height: 1.85           # 节日 / 高精细排版用 1.85；其它推文 1.75 也可
+  body_color: "#2c2c2c"            # 略软于 #333，降低视觉灼痛感
+  brand_primary: "#1a4b8c"         # 工程蓝
+  brand_accent_c: "#d9534f"        # C 端紧迫感红
+  brand_accent_b: "#b89b5e"        # B 端黄铜金（替代红色，更商务）
+  highlight_bg_c: "#fff8e1"        # C 端暖黄
+  highlight_bg_b: "#fafaf7"        # B 端暖米白
+  border_soft: "#d9d2c5"           # 羊皮纸灰，B 端卡片描边
   border_color: "#1a4b8c"
 
 # 输出口径
 editor:
-  target: 135editor   # 影响 HTML 写法：必须全部 inline style，section 嵌套，不使用 script/style/link
-  paste_target: WeChat MP   # 最终粘到微信公众号原生编辑器之前先过 135
+  target: 135editor                # 影响 HTML 写法：必须全部 inline style，section 嵌套，不使用 script/style/link
+  paste_target: WeChat MP          # 最终粘到微信公众号原生编辑器之前先过 135
+  output_dir: "output/{{YYYY-MM-DD}}-{{slug}}/"   # 落盘约定：article.html / preview.html / audit-report.md
+  preview_base_url: "http://ec2-54-196-199-146.compute-1.amazonaws.com"   # output/ 整个目录通过 gz-static.service 公网代理；编辑预览 URL = {preview_base_url}/{{YYYY-MM-DD}}-{{slug}}/article.html（注意：配图本身上传至 R2，不在此目录）
 
 # 客户画像（强制前置选择，决定话术）
 audience:
@@ -38,3 +44,33 @@ audience:
   primary_reason: 一单成交金额高，资质 / 合规 / 批量培训是长期需求
   secondary: C端个人（持证 / 考证 / 工人 / 申报补贴）
   cross_sell: 所有 C 端推文末尾必须留 B 端引流 CTA（"贵司有批量培训需求？"）
+
+# 受众驱动的设计精细度（渲染 HTML 时按 audience / 当篇 Q1 切换）
+audience_design:
+  b_end:
+    palette_intent: 沉稳、克制、商务感；不要喊口号
+    accent_color: "#b89b5e"
+    background_tint: "#fafaf7"
+    border_color: "#d9d2c5"
+    ornament_density: low          # 细线、小符号 ◆、单色描边；避免大色块
+    cta_tone: '克制："欢迎随时对接""商务专线"，不用"立即""抢报"'
+  c_end:
+    palette_intent: 醒目、亲和、有节日感
+    accent_color: "#d9534f"
+    background_tint: "#fff8e1"
+    border_color: "#f0d090"
+    ornament_density: medium       # 色块、对比强卡片、引导箭头可用
+    cta_tone: '直白号召："立即咨询""名额有限"，但仍禁用"最 / 第一 / 包过"等广告法违禁词'
+
+# 节日放假通知格式偏好（gzcots-holiday 首次运行时记录，后续 sub-skill 直接读取）
+holiday:
+  title_template: "{{YEAR}}年{{HOLIDAY_NAME}}放假通知"   # 用于归档；推文上可拆成 eyebrow + 主标题
+  date_format: "X月X日"                                  # 用户偏好；备选 "XX/XX"
+  min_length: 200                                        # 全文（含贺词）汉字数下限
+  blessing_rule: |
+    贺词必须结合当年形势：
+      ① 年份所属五年规划阶段（如 2026 = 十五五开局之年；2025 = 十四五收官）；
+      ② 建造业当下议程：智能建造 / 绿色低碳 / 新型工业化 / 装配式 / 双碳 / 老旧小区改造；
+      ③ 或近期行业重大政策（住建部 / 人社部 / 应急管理部 发文）。
+    禁止空泛的"放假快乐 + 注意安全"。
+  designer_mode: b_end                                   # 节日通知一律走 B 端克制版（节日不是带货场景）

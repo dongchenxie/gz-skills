@@ -14,6 +14,7 @@ description: 广建职校公众号节日放假通知推文生成。当用户要�
 - **信源白名单**：贺词中若引用**五年规划阶段、当年行业政策、部委发文、具体文号**，信源必须来自 `_shared/sources.yaml`；不能"凭印象"写"住建部最近强调 X" —— 要么有官网原文，要么改为含糊表述。
 - **抓取在 sub-agent 内**：如需核对"当年是什么五年规划阶段""住建部近期发文方向"，派 sub-agent 在 sources.yaml 的 `national` 层抓"通知公告"栏目摘要。
 - **先问 Q0**：本类 Q0 替代了原 Q4 营销小尾巴选项，按 `_shared/article-goals.md` 末段 holiday 表落地文体。
+- **不生成 inline 配图**：节日通知文体克制，沿用固定头尾图即可，**不调用 `scripts/gen-image.mjs`**。`_shared/image-generation.md` §3 已锁 holiday 类 inline 张数 = 0。
 
 ## 启动前置检查
 
@@ -79,6 +80,7 @@ description: 广建职校公众号节日放假通知推文生成。当用户要�
 - **贺词是否引用了当年形势**（关键词命中：五年规划名称 / 智能建造 / 绿色低碳 / 新型工业化 / 装配式 / 双碳 / 当年具体政策文号或部委发文）；未命中则报 ⚠️。
 - **若贺词引用了具体政策文号或部委发文**：sub-agent 是否已在 sources.yaml 内核对过？未核对的视为红线，必须替换为含糊表述或停下来由小编核对。
 - **日期格式是否与 `holiday.date_format` 一致**。
+- **配图维度**：本类不生成 inline 图，audit 第 6 维默认通过；但需检查 ① 头图、⑨ 尾图是否仍为 brand.yaml 固定 URL（被替换 = 红线）。
 
 输出双产物（与其他 sub-skill 一致），落盘位置按 `brand.yaml.editor.output_dir`：
 - `article.html` — 仅 `<section>` 片段，粘进 135 编辑器用；

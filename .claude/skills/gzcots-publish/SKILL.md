@@ -9,11 +9,12 @@ description: 广建职校公众号推文生成入口。当用户要给广建职�
 
 ## 全局硬约束（对所有被路由到的 sub-skill 强制生效）
 
-被路由到的 sub-skill 必须遵守以下 3 条；违反任意一条都是审核红线：
+被路由到的 sub-skill 必须遵守以下 4 条；违反任意一条都是审核红线：
 
 1. **信源白名单**：所有外部信息源（URL、条款、数字、日期、机构名）必须来自 `_shared/sources.yaml` 列出的域名。详见 `_shared/sources.yaml` 顶部说明。
 2. **抓取必须 sub-agent 内完成**：主上下文不直接 `WebFetch` 政策原文。所有抓取派 `Agent` 子 agent（`subagent_type: general-purpose`），主上下文只接收结构化 JSON。详见 `_shared/research-strategy.md`。
 3. **必须先问 Q0 本篇目的**：所有 sub-skill 在进入自己的问题清单之前，必须先问"本篇推文的核心目的是什么"（增粉 / 转化 / 混合，或 news/holiday 的本地化变体）。目的决定标题、开头、节奏、CTA、必带块。详见 `_shared/article-goals.md`。
+4. **配图（inline）必须自动生成**：所有 sub-skill 在 Research 之后、渲染之前必须派 sub-agent 调 `scripts/gen-image.mjs --role inline`，按 article-type 配额穿插 N 张装饰图（policy 1–2 / tips 1 / guide 2–3 / news 1 / holiday 0）。**头图 ① 与尾图 ⑨ 永远使用 `brand.yaml.article_assets` 固定 URL，不替换**。基调锁中国语境、东亚人物、中式建筑、政府政策手册视觉感。详见 `_shared/image-generation.md`。
 
 ## 启动前置检查
 

@@ -15,6 +15,7 @@ description: 广建职校公众号"温馨提示+营销"类推文生成。当用�
 - **抓取在 sub-agent 内**：如 Q3 有 URL，按 `_shared/research-strategy.md` 派 sub-agent 抓取。
 - **三层并发**：若用户给的是市级通知，sub-agent 仍需并发查省厅+部委是否有上位法（避免漏掉更权威条款）。
 - **先问 Q0**：按 `_shared/article-goals.md` 落地文体；本类默认推 hybrid（提示类天然偏共鸣）。
+- **配图（inline）必须自动生成**：Research 后、渲染前派 sub-agent 调 `scripts/gen-image.mjs --role inline`，产出 1 张装饰图。头图 ①、尾图 ⑨ **不替换**。详见 `_shared/image-generation.md`。
 
 ## 启动前置检查
 
@@ -48,6 +49,15 @@ description: 广建职校公众号"温馨提示+营销"类推文生成。当用�
 - 输出结构化 JSON 回主上下文，**不回 HTML**。
 
 如 Q3 为空：跳过 Research，文中不出现任何具体数字 / 期限 / 文号。**含糊表述（"近期""有规定要求"）允许，编造数字 = 红线**。
+
+## 配图生成（Research 后、渲染前 · 必须 sub-agent · 仅 inline）
+
+按 `_shared/image-generation.md` 契约派 `Agent`（`subagent_type: general-purpose`）调 `scripts/gen-image.mjs --role inline`：
+
+- **inline × 1**：`--article-type tips --audience {Q1} --goal {Q0} --theme "{Q2 主题}"`
+- `--style-extra` 倾向"平静提醒感"，例如"持证人在桌前对照学时台账" / "施工员翻看证书有效期"。**避免吓唬感**（暴雷、闪电、警报等不要用）。
+
+头图 ①、尾图 ⑨ **不替换**。sub-agent 仅返回 1 个 `inline_urls[0]`，按 ⑩ 块样式插在 ④/⑤ 块之间（推荐放第一个 ⑤ 重点卡片之前作"提示场景"破题）。
 
 ## 撰稿规则（Q0 × Q1 分流）
 
@@ -85,3 +95,4 @@ description: 广建职校公众号"温馨提示+营销"类推文生成。当用�
 
 - Q0 一致性（见 `article-goals.md` 审核钩子）。
 - 若 Q3 为空，文中是否出现具体数字 / 期限 / 文号 → 任意出现 = 红线。
+- 配图（inline）张数是否 = 1；① 头图、⑨ 尾图未被替换；图风格未"暴雷化吓唬人"（详见 audit-checklist 第 6 维）。

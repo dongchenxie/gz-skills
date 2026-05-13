@@ -9,3 +9,6 @@ __pycache__/
 
 # Claude Code local-only settings (machine-specific permissions)
 .claude/settings.local.json
+
+# Generated article output (article.html / audit-report.md / images). Served from /home/ubuntu/gz-skills/output via gz-static.service; not source.
+output/

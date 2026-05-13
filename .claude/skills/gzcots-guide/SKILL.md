@@ -15,6 +15,7 @@ description: 广建职校公众号"指引指南"类推文生成。当用户要�
 - **单源精读 + 上位法校验**：本类用户通常给 1 个具体平台 URL；sub-agent 精读该 URL，但**必须额外**在 sources.yaml 内查同主题上位法（避免指引步骤已被新政策废止）。
 - **域名硬条款**：如 Q2 URL 的 host 不在 sources.yaml 内（且不在 school_internal） → sub-agent 立即 abort，把 URL 报回主上下文，**不允许继续抓**。由小编决定是否加白。
 - **先问 Q0**：本类默认推 conv（指引类天然带客）。按 `_shared/article-goals.md` 落地文体。
+- **配图（inline）必须自动生成**：Research 后、渲染前派 sub-agent 调 `scripts/gen-image.mjs --role inline`，产出 2–3 张装饰图（步骤多 → 用图区隔阅读疲劳）。头图 ①、尾图 ⑨ **不替换**。详见 `_shared/image-generation.md`。
 
 ## 启动前置检查
 
@@ -50,6 +51,17 @@ description: 广建职校公众号"指引指南"类推文生成。当用户要�
 3. 提取：操作目的、申报对象、所需材料、操作步骤（按页面逻辑切分）、入口链接、截止日期、咨询电话。
 4. **上位法横向校验**：另外在 sources.yaml 的 `national` + `guangdong_province` 内查同主题最新通知，若发现"指引依据的政策已被废止/修订" → 在返回 JSON 的 `warnings` 字段标出，主上下文必须停下来问小编。
 5. 只把结构化步骤数组 + warnings 返回主上下文。
+
+## 配图生成（Research 后、渲染前 · 必须 sub-agent · 仅 inline）
+
+按 `_shared/image-generation.md` 契约派 `Agent` 并发调 `scripts/gen-image.mjs --role inline`。本类配额最多：
+
+- **inline × 2–3**：`--article-type guide --audience {Q1 映射 B/C/mix} --goal {Q0} --theme "{Q2 指引主题}"`
+- 三张 `--style-extra` 分别贴**不同操作阶段**：
+  - 第 1 张："准备材料"场景（在桌前整理证件 / 复印件 / 工作证明）
+  - 第 2 张："在电脑前提交申请"场景（在政务平台界面操作）
+  - 第 3 张（可选）："拿到证书 / 申报通过"的反馈场景
+- 头图 ①、尾图 ⑨ **不替换**。inline 图按 ⑩ 块样式穿插在不同步骤段之间，让读者每完成 2–3 步就有一张视觉锚。
 
 ## 撰稿规则
 
@@ -91,3 +103,4 @@ CTA 切换（按 Q1）：
 - 步骤是否漏环节 —— skill 自己读完输出 HTML，模拟一个"完全没操作过的小白"能不能从头跟到尾。任何"需要先做 X 才能做 Y"但 X 没提到的，标记 ❌。
 - sub-agent 返回的 `warnings`（如"指引政策已被废止"）必须在审核报告头部高亮显示。
 - Q0 一致性检查（见 `article-goals.md` 审核钩子）。
+- 配图（inline）张数是否 2–3；① 头图、⑨ 尾图未被替换；inline 图是否分别命中"准备材料 / 平台操作 / 拿证反馈"三个不同阶段（避免三张同质化）（详见 audit-checklist 第 6 维）。
