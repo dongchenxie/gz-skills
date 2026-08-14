@@ -22,7 +22,8 @@
 ├── gzcots-holiday/             # 节日放假通知
 │
 ├── commit-msg/                 # 通用：写 commit message
-└── daily-standup/              # 通用：从 git 活动生成 standup
+├── daily-standup/              # 通用：从 git 活动生成 standup
+└── yutong-perf/                # 通用：基于云效 MCP 的月度技术绩效考核
 ```
 
 ## gzcots 系列：客户广建职校公众号推文生成
@@ -50,6 +51,7 @@
 |---|---|
 | `commit-msg` | 根据 staged changes 生成 commit message 草稿 |
 | `daily-standup` | 从近期 git 活动生成 standup 汇报 |
+| `yutong-perf` | 基于云效 MCP 的月度技术绩效考核（5 维度，code + 项目 + 协作） |
 
 ## 新增一个 skill
 
